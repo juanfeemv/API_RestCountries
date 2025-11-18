@@ -1,0 +1,220 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background:#667eea;
+  min-height: 100vh;
+  color: #333;
+}
+
+.contenedor {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: white;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.contenedor-busqueda {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+#buscar {
+  width: 100%;
+  padding: 15px 50px 15px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+#buscar:focus {
+  background: white;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+}
+
+.contenido-principal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.seccion-paises {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.titulo-seccion {
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  color: #4a5568;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#lista-paises {
+  list-style: none;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.pais {
+  padding: 15px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid transparent;
+}
+
+.pais:hover {
+  background: #667eea;
+  color: white;
+}
+
+.seleccionado {
+  background: #667eea;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+#detalles-pais {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  min-height: 500px;
+}
+
+.bandera-pais {
+  width: 200px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  margin: 20px 0;
+}
+
+.informacion-pais {
+  display: grid;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.elemento-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 10px;
+  border-left: 4px solid #667eea;
+}
+
+.etiqueta-info {
+  font-weight: bold;
+  color: #4a5568;
+  min-width: 80px;
+}
+
+.valor-info {
+  color: #2d3748;
+}
+
+.boton-favorito {
+  background: #ffd700;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.boton-favorito:hover {
+  background: #ffe75e;
+}
+
+.boton-favorito.es-favorito {
+  background: #ffd700;
+  color: #333;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.boton-favorito.es-favorito:hover {
+  background: #ffed4e;
+}
+
+#seccion-favoritos {
+  grid-column: 1 / -1;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 25px;
+  margin-top: 30px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+#lista-favoritos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.pais-favorito {
+  background: #ffd700;
+  color: #333;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+  font-weight: 500;
+}
+
+.pais-favorito:hover {
+  background: #ffed4e;
+}
+
+.estado-vacio {
+  text-align: center;
+  color: #718096;
+  font-style: italic;
+  padding: 40px;
+}
+
+@media (max-width: 768px) {
+  .contenido-principal {
+    grid-template-columns: 1fr;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  .contenedor {
+    padding: 15px;
+  }
+}

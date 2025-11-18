@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌍 Explorador de Países</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: white;
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      animation: fadeInDown 1s ease-out;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .search-container {
+      position: relative;
+      margin-bottom: 30px;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    #search {
+      width: 100%;
+      padding: 15px 50px 15px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    #search:focus {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+      background: white;
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: #667eea;
+    }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      animation: fadeIn 1s ease-out 0.3s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .countries-section {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      color: #4a5568;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #country-list {
+      list-style: none;
+      max-height: 400px;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+
+    #country-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #country-list::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    #country-list::-webkit-scrollbar-thumb {
+      background: #667eea;
+      border-radius: 10px;
+    }
+
+    .country {
+      padding: 15px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.8);
+      border: 2px solid transparent;
+    }
+
+    .country:hover {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      transform: translateX(5px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .selected {
+      background: linear-gradient(135deg, #667eea, #764ba2) !important;
+      color: white !important;
+      transform: translateX(5px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    #country-details {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      min-height: 500px;
+    }
+
+    .country-flag {
+      width: 200px;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      margin: 20px 0;
+      transition: transform 0.3s ease;
+    }
+
+    .country-flag:hover {
+      transform: scale(1.05);
+    }
+
+    .country-info {
+      display: grid;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      background: rgba(102, 126, 234, 0.1);
+      border-radius: 10px;
+      border-left: 4px solid #667eea;
+    }
+
+    .info-label {
+      font-weight: bold;
+      color: #4a5568;
+      min-width: 80px;
+    }
+
+    .info-value {
+      color: #2d3748;
+    }
+
+    .favorite-btn {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    .favorite-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+    }
+
+    .favorite-btn.is-favorite {
+      background: linear-gradient(135deg, #ffd700, #ffed4e);
+      color: #333;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    }
+
+    .favorite-btn.is-favorite:hover {
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+    }
+
+    #favorites-section {
+      grid-column: 1 / -1;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      margin-top: 30px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+    #favorites-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .fav-country {
+      background: linear-gradient(135deg, #ffd700, #ffed4e);
+      color: #333;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+      font-weight: 500;
+    }
+
+    .fav-country:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+      background: linear-gradient(135deg, #ffed4e, #ffd700);
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #718096;
+      font-style: italic;
+      padding: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .container {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌍 Explorador de Países</h1>
+    
+    <div class="search-container">
+      <input type="text" id="search" placeholder="Buscar país...">
+      <span class="search-icon">🔍</span>
+    </div>
+
+    <div class="main-content">
+      <div class="countries-section">
+        <h2 class="section-title">🌎 Lista de Países</h2>
+        <ul id="country-list"></ul>
+      </div>
+
+      <div id="country-details">
+        <div class="empty-state">
+          <h3>Selecciona un país para ver sus detalles</h3>
+          <p>Haz clic en cualquier país de la lista para explorar su información</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="favorites-section">
+      <h2 class="section-title">⭐ Países Favoritos</h2>
+      <div id="favorites-list">
+        <div class="empty-state">No tienes países favoritos aún</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const countryList = document.getElementById('country-list');
+    const countryDetails = document.getElementById('country-details');
+    const searchInput = document.getElementById('search');
+    const favoritesList = document.getElementById('favorites-list');
+
+    let countries = [];
+
+    // Cargar favoritos al inicio
+    document.addEventListener('DOMContentLoaded', function() {
+      loadFavorites();
+    });
+
+    // Obtener la lista de países
+    fetch('https://restcountries.com/v3.1/all')
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+        countries = data.sort(function(a, b) {
+          return a.name.common.localeCompare(b.name.common);
+        });
+        displayCountries(countries);
+      })
+      .catch(function(error) {
+        console.error('Error al cargar países:', error);
+        countryList.innerHTML = '<li class="country">Error al cargar los países</li>';
+      });
+
+    // Mostrar lista de países
+    function displayCountries(countriesToShow) {
+      countryList.innerHTML = '';
+      countriesToShow.forEach(function(country) {
+        const li = document.createElement('li');
+        li.textContent = country.name.common;
+        li.classList.add('country');
+        li.addEventListener('click', function() {
+          showCountryDetails(country);
+          highlightSelected(li);
+        });
+        countryList.appendChild(li);
+      });
+    }
+
+    // Mostrar detalles del país
+    function showCountryDetails(country) {
+      const isFav = isFavorite(country.name.common);
+      
+      countryDetails.innerHTML = `
+        <h2 class="section-title">🏛️ ${country.name.common}</h2>
+        <img src="${country.flags.svg}" alt="Bandera de ${country.name.common}" class="country-flag">
+        
+        <div class="country-info">
+          <div class="info-item">
+            <span class="info-label">🏛️ Capital:</span>
+            <span class="info-value">${country.capital ? country.capital[0] : 'No disponible'}</span>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-label">👥 Población:</span>
+            <span class="info-value">${country.population.toLocaleString()} habitantes</span>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-label">📏 Área:</span>
+            <span class="info-value">${country.area ? country.area.toLocaleString() : 'No disponible'} km²</span>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-label">💰 Monedas:</span>
+            <span class="info-value">${country.currencies ? Object.values(country.currencies).map(function(c) { return c.name; }).join(', ') : 'No disponible'}</span>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-label">🗣️ Idiomas:</span>
+            <span class="info-value">${country.languages ? Object.values(country.languages).join(', ') : 'No disponible'}</span>
+          </div>
+        </div>
+        
+        <button onclick="toggleFavorite('${country.name.common}')" class="favorite-btn ${isFav ? 'is-favorite' : ''}">
+          ${isFav ? '⭐ Quitar de Favoritos' : '💫 Agregar a Favoritos'}
+        </button>
+      `;
+    }
+
+    // Buscar país
+    searchInput.addEventListener('input', function() {
+      const query = searchInput.value.toLowerCase();
+      const filtered = countries.filter(function(c) {
+        return c.name.common.toLowerCase().includes(query);
+      });
+      displayCountries(filtered);
+    });
+
+    // Resaltar país seleccionado
+    function highlightSelected(selectedLi) {
+      const items = document.querySelectorAll('.country');
+      items.forEach(function(item) {
+        item.classList.remove('selected');
+      });
+      selectedLi.classList.add('selected');
+    }
+
+    // Funciones de favoritos con localStorage
+    function getStoredFavorites() {
+      const stored = localStorage.getItem('favoriteCountries');
+      return stored ? JSON.parse(stored) : [];
+    }
+
+    function isFavorite(countryName) {
+      const favorites = getStoredFavorites();
+      return favorites.includes(countryName);
+    }
+
+    function toggleFavorite(countryName) {
+      let favorites = getStoredFavorites();
+      
+      if (favorites.includes(countryName)) {
+        favorites = favorites.filter(function(name) {
+          return name !== countryName;
+        });
+      } else {
+        favorites.push(countryName);
+      }
+      
+      localStorage.setItem('favoriteCountries', JSON.stringify(favorites));
+      loadFavorites();
+      
+      const selected = countries.find(function(c) {
+        return c.name.common === countryName;
+      });
+      if (selected) {
+        showCountryDetails(selected);
+      }
+    }
+
+    function loadFavorites() {
+      const favorites = getStoredFavorites();
+      favoritesList.innerHTML = '';
+      
+      if (favorites.length === 0) {
+        favoritesList.innerHTML = '<div class="empty-state">No tienes países favoritos aún</div>';
+        return;
+      }
+      
+      favorites.forEach(function(name) {
+        const div = document.createElement('div');
+        div.className = 'fav-country';
+        div.textContent = name;
+        div.onclick = function() {
+          const selected = countries.find(function(c) {
+            return c.name.common === name;
+          });
+          if (selected) {
+            showCountryDetails(selected);
+            highlightSelectedByName(name);
+          }
+        };
+        favoritesList.appendChild(div);
+      });
+    }
+
+    function highlightSelectedByName(name) {
+      const items = document.querySelectorAll('.country');
+      items.forEach(function(item) {
+        item.classList.remove('selected');
+        if (item.textContent === name) {
+          item.classList.add('selected');
+          item.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      });
+    }
+  </script>
+</body>
+</html>
